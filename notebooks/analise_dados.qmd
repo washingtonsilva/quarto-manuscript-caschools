@@ -1,0 +1,97 @@
+---
+title: "Análise dos dados"
+format: html
+execute:
+  echo: false
+  warning: false
+  message: false
+---
+
+```{r}
+#| label: prepara-dados
+
+# Carrega os pacotes necessários.
+library(tidyverse)
+library(AER)
+library(modelsummary)
+
+# Carrega os dados dos distritos escolares da Califórnia.
+data("CASchools", package = "AER")
+
+# Cria os dois indicadores utilizados na análise.
+dados_escolas <-
+  CASchools |>
+  dplyr::mutate(
+    alunos_por_professor = students / teachers,
+    desempenho_medio = (read + math) / 2
+  )
+
+# Estima o modelo que relaciona o desempenho médio apenas à
+# relação aluno-professor.
+modelo_1 <-
+  lm(
+    desempenho_medio ~ alunos_por_professor,
+    data = dados_escolas
+  )
+
+# Estima o modelo ajustado pela renda média do distrito e pelo
+# percentual de estudantes aprendizes de inglês.
+modelo_2 <-
+  lm(
+    desempenho_medio ~ alunos_por_professor + income + english,
+    data = dados_escolas
+  )
+```
+
+
+
+```{r}
+#| label: tbl-modelos
+#| tbl-cap: "Associação entre relação aluno-professor e desempenho médio"
+
+# Organiza os resultados dos dois modelos em uma única tabela.
+modelsummary::modelsummary(
+  list(
+    "Modelo 1" = modelo_1,
+    "Modelo 2" = modelo_2
+  ),
+  output = "markdown",
+  coef_map = c(
+    "(Intercept)" = "Constante",
+    "alunos_por_professor" = "Alunos por professor",
+    "income" = "Renda média do distrito (US$ mil)",
+    "english" = "Estudantes aprendizes de inglês (%)"
+  ),
+  statistic = "conf.int",
+  gof_map = c("nobs", "r.squared"),
+  fmt = 2
+)
+```
+
+
+```{r}
+#| label: fig-relacao-desempenho
+#| fig-cap: "Relação aluno-professor e desempenho médio nos distritos escolares"
+#| fig-width: 7
+#| fig-height: 4.5
+
+# Representa graficamente a relação entre alunos por professor e
+# desempenho médio e adiciona a linha de regressão linear.
+ggplot2::ggplot(
+  dados_escolas,
+  ggplot2::aes(x = alunos_por_professor, y = desempenho_medio)
+) +
+  ggplot2::geom_point(alpha = 0.55, color = "#33658A") +
+  ggplot2::geom_smooth(
+    method = "lm",
+    formula = y ~ x,
+    se = TRUE,
+    color = "#B23A48",
+    fill = "#E9A3AA"
+  ) +
+  ggplot2::labs(
+    x = "Alunos por professor",
+    y = "Desempenho médio"
+  ) +
+  ggplot2::theme_minimal(base_size = 11)
+```

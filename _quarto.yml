@@ -1,0 +1,18 @@
+project:
+  type: manuscript
+  execute-dir: project
+
+manuscript:
+  article: index.qmd
+
+lang: pt-BR
+
+format:
+  html:
+    toc-location: right
+  typst: default
+
+citeproc: true
+
+execute:
+  freeze: auto
