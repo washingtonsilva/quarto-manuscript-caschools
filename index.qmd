@@ -1,0 +1,144 @@
+---
+title: "Relação aluno-professor e desempenho em distritos escolares da Califórnia"
+
+author:
+
+  - name: Washington Santos da Silva
+    orcid: 0000-0003-2396-3507
+    email: washington.silva@ifmg.edu.br
+    corresponding: true
+    affiliation:
+      - ref: formiga
+
+  - name: Felipe Luiz Fonsêca
+    affiliation:
+      - ref: formiga
+
+  - name: Vinícius Silva Faria
+    affiliation:
+      - ref: formiga
+
+  - name: João Vitor Balduino Soares de Melo
+    affiliation:
+      - ref: arcos
+
+affiliations:
+  - id: formiga
+    name: IFMG - Campus Formiga
+  - id: arcos
+    name: IFMG - Campus Arcos
+
+abstract: |
+  Este miniestudo examina a associação entre a relação aluno-professor e o
+  desempenho médio em testes padronizados de distritos escolares da
+  Califórnia. São comparados um modelo linear simples e um modelo ajustado pela
+  renda média do distrito e pelo percentual de estudantes aprendizes de
+  inglês. Os resultados mostram que a associação negativa observada no modelo
+  simples é substancialmente atenuada após a inclusão dessas características
+  socioeconômicas. A análise é descritiva e não permite interpretação causal.
+
+keywords:
+  - relação aluno-professor
+  - desempenho escolar
+  - distritos escolares
+  - regressão linear
+
+bibliography: referencias.bib
+csl: associacao-brasileira-de-normas-tecnicas-ipea.csl
+
+engine: knitr
+---
+
+
+```{r}
+#| include: false
+
+# carrega os dados do pacote AER
+data("CASchools", package = "AER")
+```
+
+
+## Introdução
+
+A relação entre recursos escolares e desempenho discente permanece relevante
+para a gestão educacional. A literatura mostra, contudo, que associações entre
+recursos e resultados variam entre contextos e dependem das características dos
+estudantes e das organizações escolares [@hanushek1997]. Estudos sobre tamanho
+de turma também ressaltam a importância de distinguir associações observadas de
+estimativas causais [@angristlavy1999].
+
+Este estudo investiga se distritos escolares com maior número de alunos por
+professor apresentam desempenho médio diferente nos testes de leitura e
+matemática.
+
+
+
+## Métodos
+
+Foram utilizados os dados `CASchools`, distribuídos pelo pacote R `AER`. O
+conjunto reúne distritos escolares K–6 e K–8 da Califórnia com informações de
+1998 e 1999 [@stockwatson2007; @kleiberzeileis2008]. A unidade de observação é o
+distrito escolar.
+
+A relação aluno-professor foi calculada dividindo a matrícula total pelo número
+de professores em equivalentes de tempo integral. O desempenho médio foi
+calculado como a média dos escores de leitura e matemática do teste Stanford 9.
+
+Foram estimados dois modelos lineares. O Modelo 1 relaciona o desempenho médio
+apenas à relação aluno-professor. O Modelo 2 acrescenta a renda média do
+distrito, medida em milhares de dólares, e o percentual de estudantes
+aprendizes de inglês. Os modelos descrevem associações condicionais e não são
+interpretados causalmente.
+
+
+
+## Resultados
+
+ A análise inclui `r nrow(CASchools)` distritos. A relação média é de
+`r round(mean(CASchools$students / CASchools$teachers), 1)` alunos por
+professor.
+
+A @tbl-modelos compara os dois modelos estimados.
+
+{{< embed notebooks/analise_dados.qmd#tbl-modelos >}}
+
+A comparação entre os modelos mostra que a associação negativa observada no
+modelo simples é substancialmente atenuada após a inclusão da renda média do
+distrito e do percentual de estudantes aprendizes de inglês.
+
+A @fig-relacao-desempenho apresenta a relação observada entre os dois
+indicadores. A inclinação negativa da linha resume a associação não ajustada e
+não deve ser interpretada como resultado do Modelo 2.
+
+{{< embed notebooks/analise_dados.qmd#fig-relacao-desempenho >}}
+
+
+
+## Discussão
+
+Os distritos com maior relação aluno-professor apresentaram, em média, menor
+desempenho no modelo simples. Essa associação praticamente desapareceu após a
+inclusão da renda média distrital e do percentual de estudantes aprendizes de
+inglês.
+
+O resultado reforça que diferenças socioeconômicas entre distritos podem estar
+relacionadas simultaneamente à organização dos recursos escolares e ao
+desempenho. Como o estudo utiliza dados observacionais agregados e uma
+especificação deliberadamente simples, não é possível atribuir causalidade à
+relação aluno-professor.
+
+
+
+## Referências
+
+::: {#refs}
+:::
+
+
+
+
+
+
+
+
+
